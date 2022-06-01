@@ -1,0 +1,37 @@
+Features:
+1. ‘Id-hushed_internalpatientid’: Id of patients, we have 11623 different patients - 11623 values, Hash - long HEX
+2. ‘Form Name’: Type of medical visit - 9 values, Hebrew words
+3. ‘Hospital’: Hospital code - 4 values, float
+4. ‘User Name’: User name of the doctor reporter - 154 values, <NUM>_Onco
+5. ‘Age’: Age of patient - 11623 values, float
+6. ‘Basic stage’: Carcinoma Basic stage - 4 Different stages (c, p , r, null)
+7. ‘Diagnosis date’: Date of diagnosis - Datetime
+8. ‘Her2’: Tumor marker test that determines the number of copies of the HER2 gene or the amount of HER2 protein in a cancer cell - various formats
+9. ‘Histological diagnosis’: Histological diagnosis - 41 values, CONSTS (english caps)
+10. ‘Histopatological degree’: Histopatological degree - 6 values - G1 to G4 + GX + Null
+11. ‘Ivi -Lymphovascular invasion’: Whether the tumor invaded blood vessels or to lymph nodes -
+17 values, various formats.
+12. ‘KI67 protein’: The rate of cell multiplication in the tumor - a number - various formats.
+13. ‘Lymphatic penetration’: How much the Lympha was penetrate - 5 values, L<x> + null
+14. ‘M -metastases mark (TNM)’: Amount of existence of metastases - 6 values, M<x>
+15. ‘N -lymph nodes mark (TNM)’: Amount of lymph invasion - 21 values, N<x>
+16. ‘T -Tumor mark (TNM)’: Size of tumor in the first exam - 22 values, T<Something>
+17. ‘Margin Type’: Tumor margin type - 3 values, hebrew consts
+18. ‘Nodes exam’: How many Lymph nodes were examined - 42 values, float
+19. ‘Positive nodes’: How many of Lymph nodes contained carcinoma metastases - 28 values, integers
+20. ‘Side’: Breast side of tumor - 3, hebrew const
+21. ‘Stage’: Stage of cancer - 17 values, english const
+22. ‘Surgery date1’: Date of first surgery - Datetime
+23. ‘Surgery date2’: Date of second surgery - Datetime
+24. ‘Surgery date3’: Date of third surgery - Datetime
+25. ‘Surgery name1’: Name of first surgery - 23 values, CONSTS (english caps)
+26. ‘Surgery name2’: Name of second surgery - 18 values, CONSTS (english caps)
+27. ‘Surgery name3’: Name of third surgery - 6 values, CONSTS (english caps)
+28. ‘Surgery sum’: Number of surgeries: 3 values (1, 2, 3)
+29. ‘Tumor depth’: Depth of tumor - 6 values, float
+30. ‘Tumor width’: Width of tumor - 31 values, float
+31. ‘er’: Tumor marker test that determines the sensitivity to estrogen of the cancer cell - various formats
+32. ‘pr’: Tumor marker test that determines the sensitivity to progesterone of the cancer cell -various formats
+33. ‘surgery before or after-Actual activity’: Name of surgery before diagnosis - 10 values, hebrew short string
+34. ‘surgery before or after-Activity date’: Date of surgery before diagnosis - Datetime
+
