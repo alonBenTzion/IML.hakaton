@@ -8,8 +8,13 @@ import re
 import numpy as np
 
 FEATURE_12_DEFAULT = -1
+FEATURE_18_DEFAULT = -1
 
-def clean_12(s):
+
+def clean_12(df):
+  df['אבחנה-KI67 protein'] =  df['אבחנה-KI67 protein'].apply(clean_18)
+
+def _clean_12_s(s):
   if s is np.nan:
     return FEATURE_12_DEFAULT
   if type(s)!=str:
@@ -39,5 +44,6 @@ def clean_12(s):
     return 10
   return FEATURE_12_DEFAULT
 
-
+def clean_18(df):
+  df['אבחנה-Nodes exam'].fillna(FEATURE_18_DEFAULT)
 
