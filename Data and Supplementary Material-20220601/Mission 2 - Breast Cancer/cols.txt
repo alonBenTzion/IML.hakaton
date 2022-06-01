@@ -35,3 +35,13 @@ Features:
 33. ‘surgery before or after-Actual activity’: Name of surgery before diagnosis - 10 values, hebrew short string
 34. ‘surgery before or after-Activity date’: Date of surgery before diagnosis - Datetime
 
+
+				*  אבחנה-Her2
+				□ אבחנה-Ivi -Lymphovascular invasion
+				□ אבחנה-KI67 protein
+				□ אבחנה-N -lymph nodes mark (TNM)
+				□ אבחנה-Nodes exam
+				□ אבחנה-Positive nodes
+				□ אבחנה-T -Tumor mark (TNM)
+				□ אבחנה-er
+אבחנה-pr
