@@ -1,6 +1,3 @@
-import pandas as pd
-import numpy as np
-
 pos = ["חיובי", "jhuch","+","=","neg"]
 neg = ["שלילי", "akhkh","-","pos"]
 
@@ -9,13 +6,14 @@ import numpy as np
 
 FEATURE_12_DEFAULT = -1
 FEATURE_18_DEFAULT = -1
+FEATURE_19_DEFAULT = -1
 
 
 def clean_12(df):
-  df['אבחנה-KI67 protein'] =  df['אבחנה-KI67 protein'].apply(clean_18)
+  df['אבחנה-KI67 protein'] =  df['אבחנה-KI67 protein'].apply(clean_12)
 
 def _clean_12_s(s):
-  if s is np.nan:
+  if s is None:
     return FEATURE_12_DEFAULT
   if type(s)!=str:
     return s
@@ -45,5 +43,7 @@ def _clean_12_s(s):
   return FEATURE_12_DEFAULT
 
 def clean_18(df):
-  df['אבחנה-Nodes exam'].fillna(FEATURE_18_DEFAULT)
+  df['אבחנה-Nodes exam']=df['אבחנה-Nodes exam'].apply(lambda x:FEATURE_18_DEFAULT if x is None else x)
 
+def clean_19(df):
+  df['אבחנה-Nodes exam']=df['אבחנה-Nodes exam'].apply(lambda x:FEATURE_19_DEFAULT if x is None else x)
