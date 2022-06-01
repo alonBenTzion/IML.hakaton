@@ -1,19 +1,14 @@
-pos = ["חיובי", "jhuch","+","=","neg"]
-neg = ["שלילי", "akhkh","-","pos"]
-
 import re
 import numpy as np
 
 FEATURE_12_DEFAULT = -1
 FEATURE_18_DEFAULT = -1
-FEATURE_19_DEFAULT = -1
-
 
 def clean_12(df):
-  df['אבחנה-KI67 protein'] =  df['אבחנה-KI67 protein'].apply(clean_12)
+  df['אבחנה-KI67 protein'] =  df['אבחנה-KI67 protein'].apply(clean_18)
 
 def _clean_12_s(s):
-  if s is None:
+  if s is np.nan:
     return FEATURE_12_DEFAULT
   if type(s)!=str:
     return s
@@ -43,7 +38,12 @@ def _clean_12_s(s):
   return FEATURE_12_DEFAULT
 
 def clean_18(df):
-  df['אבחנה-Nodes exam']=df['אבחנה-Nodes exam'].apply(lambda x:FEATURE_18_DEFAULT if x is None else x)
+  df['אבחנה-Nodes exam'].fillna(FEATURE_18_DEFAULT)
 
-def clean_19(df):
-  df['אבחנה-Nodes exam']=df['אבחנה-Nodes exam'].apply(lambda x:FEATURE_19_DEFAULT if x is None else x)
+import pandas as pd
+DATA_PATH = 'Mission 2 - Breast Cancer/train.feats.csv'
+df = pd.read_csv(DATA_PATH)
+print(sum(df['אבחנה-Nodes exam'].isna()))
+print(df['אבחנה-Nodes exam'].value_counts())
+# df['אבחנה-Nodes exam'] = df['אבחנה-Nodes exam'].apply(clean_18)
+# [i for i in df['אבחנה-KI67 protein'].unique() if type(i)!=int]
