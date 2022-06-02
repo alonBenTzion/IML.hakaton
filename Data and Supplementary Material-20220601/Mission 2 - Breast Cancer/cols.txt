@@ -44,4 +44,4 @@ Features:
 				□ אבחנה-Positive nodes
 				□ אבחנה-T -Tumor mark (TNM)
 				□ אבחנה-er
-אבחנה-pr
+                אבחנה-pr

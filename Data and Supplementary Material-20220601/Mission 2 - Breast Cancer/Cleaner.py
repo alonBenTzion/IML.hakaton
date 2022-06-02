@@ -13,7 +13,7 @@ FEATURE_31_DEFAULT = 0
 FEATURE_32_DEFAULT = 0
 
 
-# data = pandas.read_csv("train.feats.csv").fillna(np.nan).replace([np.nan], [None])
+# data = pd.read_csv("train.feats.csv").fillna(np.nan).replace([np.nan], [None])
 
 def clean_8(data: pd.DataFrame) -> pd.DataFrame:
   """
