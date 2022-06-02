@@ -7,17 +7,15 @@ import numpy as np
 import pandas as pd
 from .Cleaner import clean_data, TUMOR_SIZE_CLEAN_CSV_NAME, DATA_PATH
 
-TARGET_NAMES = ['ADR - Adrenals',
- 'BON - Bones',
- 'BRA - Brain',
- 'HEP - Hepatic',
- 'LYM - Lymph nodes',
- 'MAR - Bone Marrow',
- 'OTH - Other',
- 'PER - Peritoneum',
- 'PLE - Pleura',
- 'PUL - Pulmonary',
- 'SKI - Skin']
+import matplotlib.pyplot as plt
+import numpy as np
+from sklearn import datasets, linear_model
+from sklearn.metrics import mean_squared_error, r2_score
+
+TARGET_NAMES = ['אבחנה-Tumor size']
+
+
+
 
 
 
@@ -36,6 +34,22 @@ if __name__ == '__main__':
     dummy_cols_to_add = set(x_test.columns) - set(X.columns)
     for col in dummy_cols_to_add:
         X[col] = np.zeros(len(X))
+
+    # Split the data into training/testing sets
+    X_train = X[:-20]
+    X_test = X[-20:]
+
+    # Split the targets into training/testing sets
+    diabetes_y_train = diabetes_y[:-20]
+    diabetes_y_test = diabetes_y[-20:]
+
+    regr = linear_model.LinearRegression()
+    regr.fit(diabetes_X_train, diabetes_y_train)
+
+
+
+
+
 
     n_samples, n_features = X.shape # 10,100
     n_outputs = Y.shape[1] # 3
