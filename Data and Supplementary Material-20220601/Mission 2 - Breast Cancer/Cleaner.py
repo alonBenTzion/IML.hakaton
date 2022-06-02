@@ -30,7 +30,7 @@ def to_epoch(data:pd.DataFrame, cols:list) -> pd.DataFrame:
     returns fixed data
     """
     for col in cols:
-        data[col] = pd.to_datetime(data[col]).apply(lambda x:dt.timestamp(x))
+        data[col] = pd.to_datetime(data[col]).apply(lambda x:dt.timestamp(x) if type(x) ==pd.Timestamp else -1)
     return data
 
 
@@ -270,6 +270,7 @@ if __name__ == '__main__':
     data = pd.read_csv(DATA_PATH)
     data = data.fillna(np.nan).replace([np.nan], [None])
     data = remove_cols(data, COLUMNS_TO_REMOVE)
+    data = to_epoch(data, cols=['surgery before or after-Activity date','אבחנה-Diagnosis date'])
 
     data = clean_8(data)
     data = clean_11(data)
