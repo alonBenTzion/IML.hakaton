@@ -17,8 +17,11 @@ FEATURE_32_DEFAULT = 0
 
 COLUMNS_TO_REMOVE = [' Hospital', 'User Name', 'אבחנה-Surgery date1',
                      'אבחנה-Surgery date2', 'אבחנה-Surgery date3',
-                     'אבחנה-Surgery name1', 'אבחנה-Surgery name2', 'אבחנה-Surgery name3']
-
+                     'אבחנה-Surgery name1', 'אבחנה-Surgery name2', 'אבחנה-Surgery name3',
+                     'אבחנה-Tumor depth','אבחנה-Tumor width','surgery before or after-Actual activity']
+COLUMNS_TO_DUMMIES = ['אבחנה-Basic stage','אבחנה-Histological diagnosis','אבחנה-Histopatological degree','אבחנה-Lymphatic penetration'
+                      ,'אבחנה-M -metastases mark (TNM)','אבחנה-Margin Type','אבחנה-N -lymph nodes mark (TNM)',
+                      'אבחנה-Side','אבחנה-Stage','אבחנה-Surgery sum','אבחנה-T -Tumor mark (TNM)']
 
 def clean_8(data: pd.DataFrame) -> pd.DataFrame:
     """
@@ -243,6 +246,10 @@ def remove_cols(data, cols_to_remove):
     return data
 
 
+def dummies(df, features=COLUMNS_TO_DUMMIES):
+    df = pd.get_dummies(df, columns=features)
+    return df
+
 def manipulate_surgeries(data):
     pass
 
@@ -275,4 +282,6 @@ if __name__ == '__main__':
     data = form_name_to_one_hot(data)
     data = add_target(data)
     data = group_by_id(data)
+    data.drop(columns = ['id-hushed_internalpatientid'], inplace=True)
+    data = dummies(data)
     data.to_csv('clean_data.csv')
