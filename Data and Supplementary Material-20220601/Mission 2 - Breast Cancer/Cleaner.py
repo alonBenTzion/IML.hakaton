@@ -243,9 +243,9 @@ def form_name_to_one_hot(df):
     return df
 
 
-def add_target(df, target, is_meta = True):
-    if is_meta:
-        df['target'] = target['אבחנה-Location of distal metastases'].apply(ast.literal_eval)
+def add_target(df, target, target_name):
+    if target_name == 'אבחנה-Location of distal metastases':
+        df['target'] = target[target_name].apply(ast.literal_eval)
         df = df.drop('target', 1).join(df.target.str.join('|').str.get_dummies())
     else:
         df['target'] = target['אבחנה-Tumor size']
@@ -265,7 +265,7 @@ def manipulate_surgeries(data):
     pass
 
 
-def clean_data(data, target = None, to_save = False, outputfile = METASTASES_CLEAN_CSV_NAME):
+def clean_data(data, target = None, target_name = None, to_save = False, outputfile = 'clean_data.csv'):
     data = data.fillna(np.nan).replace([np.nan], [None])
     data = remove_cols(data, COLUMNS_TO_REMOVE)
     data = to_epoch(data, cols=['surgery before or after-Activity date', 'אבחנה-Diagnosis date'])
@@ -283,9 +283,9 @@ def clean_data(data, target = None, to_save = False, outputfile = METASTASES_CLE
 
     if target is not None:
         if outputfile == METASTASES_CLEAN_CSV_NAME:
-            data = add_target(data, target, True)
+            data = add_target(data, target, target_name)
         else:
-            data = add_target(data, target, False)
+            data = add_target(data, target, target_name)
 
     data = group_by_id(data)
     data = dummies(data)
