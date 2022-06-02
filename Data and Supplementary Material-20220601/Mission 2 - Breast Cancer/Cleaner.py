@@ -6,6 +6,9 @@ import re
 import numpy as np
 import pandas as pd
 
+TARGET_PATH = 'Data and Supplementary Material-20220601/Mission 2 - Breast Cancer/train.labels.0.csv'
+DATA_PATH = "train.feats.csv"
+
 FEATURE_12_DEFAULT = -1
 FEATURE_18_DEFAULT = -1
 FEATURE_19_DEFAULT = -1 #TODO check with Roey if still needed if doing fillna(NONE)
@@ -13,17 +16,13 @@ FEATURE_31_DEFAULT = 0
 FEATURE_32_DEFAULT = 0
 
 
-# data = pd.read_csv("train.feats.csv").fillna(np.nan).replace([np.nan], [None])
-
 def clean_8(data: pd.DataFrame) -> pd.DataFrame:
   """
   as fish returns only two options (True/False), map all "pos" containing strings (heb and eng), "+/=" signs to Positive etc.
   marking data as 0 - none, 1 - intermediate, 2 - exist
   other will get 0 value
   """
-
   data["אבחנה-Her2"] = data["אבחנה-Her2"].apply(clean_8_apply_func)
-
   return data
 
 def clean_8_apply_func(val: str) -> int:
@@ -50,7 +49,6 @@ def clean_8_apply_func(val: str) -> int:
 #   her2d = data["אבחנה-Her2"]
 #   [name for name in her2d if
 #    name is not None and type(name) != float and not any(word in name.lower() for word in pos + neg + inter)]
-
 
 def clean_12(df):
   df['אבחנה-KI67 protein'] =  df['אבחנה-KI67 protein'].apply(clean_12)
@@ -106,6 +104,9 @@ def _clean_31_s(s):
     return 0
   return 0
 
+def clean_31(df):
+  df['אבחנה-er'] =  df['אבחנה-er'].apply(_clean_31_s)
+
 def _clean_32_s(s):
   if s is None:
     return FEATURE_32_DEFAULT
@@ -121,12 +122,8 @@ def _clean_32_s(s):
     return 0
   return 0
 
-def clean_31(df):
-  df['אבחנה-er'] =  df['אבחנה-er'].apply(_clean_31_s)
-
 def clean_32(df):
   df['אבחנה-pr'] = df['אבחנה-pr'].apply(_clean_32_s)
-
 
 def group_by_id(df):
   """
@@ -147,9 +144,16 @@ def form_name_to_one_hot(df):
   df = pd.get_dummies(df, columns=[' Form Name', ])
   return df
 
+def add_target(df):
+  target = pd.read_csv(TARGET_PATH)
+  df['target'] = target['אבחנה-Location of distal metastases']
+  return df
+
 if __name__ == '__main__':
-  data = pd.read_csv("train.feats.csv").fillna(np.nan).replace([np.nan], [None])
-  clean_8(data)
-  print(data["אבחנה-Her2"].unique())
-
-
+  data = pd.read_csv(DATA_PATH)
+  data = data.fillna(np.nan).replace([np.nan], [None])
+  for i in range(1,33):
+    eval(f'data = clean_{i}(data)')
+  data = form_name_to_one_hot(data)
+  data = add_target(data)
+  data = group_by_id(data)
