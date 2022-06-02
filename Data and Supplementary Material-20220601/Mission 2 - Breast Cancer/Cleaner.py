@@ -50,6 +50,35 @@ def clean_8_apply_func(val: str) -> int:
 #   [name for name in her2d if
 #    name is not None and type(name) != float and not any(word in name.lower() for word in pos + neg + inter)]
 
+def clean_11(df: pd.DataFrame):
+    """
+    original values- array([nan, 'none', 'NO', '-', '+', 'YES', 'no', 'single focus', 'not',
+       'yes', '(-)', '?']
+    2 samples with the value of "single focus" were replaced with null
+    after cleaning this feature, 0 is no penetration, and 1 is penetration
+    printing num of samples for each value
+    did not take in a concideration other values
+    """
+
+    feature = df["אבחנה-Ivi -Lymphovascular invasion"]
+    for ind, value in enumerate(feature):
+        if value is None or value == '?':
+            feature[ind] = 0
+        elif value == "single focus":
+            feature[ind] = None
+        elif type(value) is str:
+            if value.isalpha():
+                value = value.lower()
+                if(value.find('n') != -1):
+                   feature[ind] = 0
+                elif(value.find('y') != -1):
+                    feature[ind] = 1
+            elif value.find('-') != -1:
+                feature[ind] = 0
+            elif value.find('+') != -1:
+                feature[ind] = 1
+
+
 def clean_12(df):
   df['אבחנה-KI67 protein'] =  df['אבחנה-KI67 protein'].apply(clean_12)
 
@@ -83,11 +112,34 @@ def _clean_12_s(s):
     return 10
   return FEATURE_12_DEFAULT
 
+def clean_15(df: pd.DataFrame):
+    """
+    original train value - array([nan, 'N1', 'N0', '#NAME?', 'N1a', 'N2', 'NX', 'N1c', 'ITC',
+       'N1mic', 'N3', 'N3d', 'N2a', 'Not yet Established', 'N1b', 'N3b']
+    num of unique values in train data - 16 but in document is 21
+
+    meaning of feature from the internet " N1: The cancer has spread to 1 or more lymph nodes on the same side as the primary tumor,
+    and the cancer found in the node is 6 cm or smaller. N2: Cancer has spread to 1 or more lymph nodes on either side of the body,
+    and none is larger than 6 cm. N3: The cancer is found in a lymph node and is larger than 6 cm."
+
+    """
+    feature = df["אבחנה-N -lymph nodes mark (TNM)"]
+    for ind, value in enumerate(feature):
+       if value == 'Not yet Established' or value.find("NAME") != -1:
+          feature[ind] = None
+
+def clean_16(df: pd.DataFrame):
+    """
+    Tumor mark.
+    replace all strings indicating of None with 0.0
+    """
+    df["אבחנה-T -Tumor mark (TNM)"] = df["אבחנה-T -Tumor mark (TNM)"].replace(['Not yet Established',None], 0.0)
+
 def clean_18(df):
   df['אבחנה-Nodes exam']=df['אבחנה-Nodes exam'].apply(lambda x:FEATURE_18_DEFAULT if x is None else x)
 
 def clean_19(df):
-  df['אבחנה-Nodes exam']=df['אבחנה-Nodes exam'].apply(lambda x:FEATURE_19_DEFAULT if x is None else x)
+  df["אבחנה-Positive nodes"]=df["אבחנה-Positive nodes"].apply(lambda x:FEATURE_19_DEFAULT if x is None else x)
 
 def _clean_31_s(s):
   if s is None:
@@ -121,6 +173,13 @@ def _clean_32_s(s):
   if '-' in s or '_' in s or 'low' in s or 'n' in s or 'ש' in s or 'nge' in s or 'eg' in s:
     return 0
   return 0
+
+def clean_30(df: pd.DataFrame):
+  """
+  tumor width
+  replace all None with zero
+  """
+  df["אבחנה-Tumor width"] = df["אבחנה-Tumor width"].replace([None], 0.0)
 
 def clean_32(df):
   df['אבחנה-pr'] = df['אבחנה-pr'].apply(_clean_32_s)
