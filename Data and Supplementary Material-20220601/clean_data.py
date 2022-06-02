@@ -3,6 +3,8 @@ import numpy as np
 
 FEATURE_12_DEFAULT = -1
 FEATURE_18_DEFAULT = -1
+FEATURE_31_DEFAULT = 0
+FEATURE_32_DEFAULT = 0
 
 def clean_12(df):
   df['אבחנה-KI67 protein'] =  df['אבחנה-KI67 protein'].apply(clean_18)
@@ -40,10 +42,51 @@ def _clean_12_s(s):
 def clean_18(df):
   df['אבחנה-Nodes exam'].fillna(FEATURE_18_DEFAULT)
 
+def _clean_31_s(s):
+  if s is None:
+    return FEATURE_31_DEFAULT
+  if type(s) == int:
+    return int(s>=10)
+  s=str.lower(s)
+  m = re.findall(r"\d{1,2}", s)
+  if m:
+    return int(m[0]>=10)
+  if '+' in s or 'p' in s or 'ח' in s or 'high' in s or 'strongly' in s:
+    return 1
+  if '-' in s or '_' in s or 'low' in s or 'n' in s or 'ש' in s or 'nge' in s or 'eg' in s:
+    return 0
+  return 0
+
+def _clean_32_s(s):
+  if s is None:
+    return FEATURE_32_DEFAULT
+  if type(s) == int:
+    return int(s>=10)
+  s=str.lower(s)
+  m = re.findall(r"\d{1,2}", s)
+  if m:
+    return int(m[0]>=10)
+  if '+' in s or 'p' in s or 'ח' in s or 'high' in s or 'strongly' in s:
+    return 1
+  if '-' in s or '_' in s or 'low' in s or 'n' in s or 'ש' in s or 'nge' in s or 'eg' in s:
+    return 0
+  return 0
+
+def clean_31(df):
+  df['אבחנה-er'] =  df['אבחנה-er'].apply(_clean_31_s)
+
+def clean_32(df):
+  df['אבחנה-pr'] = df['אבחנה-pr'].apply(_clean_32_s)
+
 import pandas as pd
+col_name = 'אבחנה-T -Tumor mark (TNM)'
 DATA_PATH = 'Mission 2 - Breast Cancer/train.feats.csv'
 df = pd.read_csv(DATA_PATH)
-print(sum(df['אבחנה-Nodes exam'].isna()))
-print(df['אבחנה-Nodes exam'].value_counts())
+
+df.groupby(['Id-hushed_internalpatientid',''])
+print(sum(df[col_name].isna()))
+print(df[col_name].value_counts())
 # df['אבחנה-Nodes exam'] = df['אבחנה-Nodes exam'].apply(clean_18)
 # [i for i in df['אבחנה-KI67 protein'].unique() if type(i)!=int]
+
+#16

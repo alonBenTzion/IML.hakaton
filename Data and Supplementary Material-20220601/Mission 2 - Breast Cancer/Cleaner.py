@@ -144,7 +144,7 @@ def group_by_id(df):
   return df
 
 def form_name_to_one_hot(df):
-  df = pd.get_dummies(df, columns=[' Form Name'])
+  df = pd.get_dummies(df, columns=[' Form Name', ])
   return df
 
 if __name__ == '__main__':
