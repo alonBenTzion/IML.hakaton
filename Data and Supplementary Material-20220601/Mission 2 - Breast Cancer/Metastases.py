@@ -1,6 +1,6 @@
 from sklearn.multioutput import MultiOutputClassifier
 from sklearn.svm import SVC
-from load_data_and_clean import load_train_test_data_and_clean
+from .load_data_and_clean import load_train_test_data_and_clean
 
 TRAIN_X_PATH = 'train.feats.csv'
 TRAIN_Y_PATH = 'train.labels.0.csv'

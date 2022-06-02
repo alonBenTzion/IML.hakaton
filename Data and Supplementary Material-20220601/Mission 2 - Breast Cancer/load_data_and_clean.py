@@ -1,5 +1,5 @@
 import pandas as pd
-from Cleaner import clean_data
+from .Cleaner import clean_data
 import numpy as np
 
 
