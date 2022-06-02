@@ -9,6 +9,8 @@ import pandas as pd
 FEATURE_12_DEFAULT = -1
 FEATURE_18_DEFAULT = -1
 FEATURE_19_DEFAULT = -1 #TODO check with Roey if still needed if doing fillna(NONE)
+FEATURE_31_DEFAULT = 0
+FEATURE_32_DEFAULT = 0
 
 
 # data = pandas.read_csv("train.feats.csv").fillna(np.nan).replace([np.nan], [None])
@@ -86,3 +88,39 @@ def clean_18(df):
 
 def clean_19(df):
   df['אבחנה-Nodes exam']=df['אבחנה-Nodes exam'].apply(lambda x:FEATURE_19_DEFAULT if x is None else x)
+
+def _clean_31_s(s):
+  if s is None:
+    return FEATURE_31_DEFAULT
+  if type(s) == int:
+    return int(s>=10)
+  s=str.lower(s)
+  m = re.findall(r"\d{1,2}", s)
+  if m:
+    return int(m[0]>=10)
+  if '+' in s or 'p' in s or 'ח' in s or 'high' in s or 'strongly' in s:
+    return 1
+  if '-' in s or '_' in s or 'low' in s or 'n' in s or 'ש' in s or 'nge' in s or 'eg' in s:
+    return 0
+  return 0
+
+def _clean_32_s(s):
+  if s is None:
+    return FEATURE_32_DEFAULT
+  if type(s) == int:
+    return int(s>=10)
+  s=str.lower(s)
+  m = re.findall(r"\d{1,2}", s)
+  if m:
+    return int(m[0]>=10)
+  if '+' in s or 'p' in s or 'ח' in s or 'high' in s or 'strongly' in s:
+    return 1
+  if '-' in s or '_' in s or 'low' in s or 'n' in s or 'ש' in s or 'nge' in s or 'eg' in s:
+    return 0
+  return 0
+
+def clean_31(df):
+  df['אבחנה-er'] =  df['אבחנה-er'].apply(_clean_31_s)
+
+def clean_32(df):
+  df['אבחנה-pr'] = df['אבחנה-pr'].apply(_clean_32_s)
