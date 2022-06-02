@@ -9,8 +9,11 @@ import numpy as np
 import pandas as pd
 from datetime import datetime as dt
 
-TARGET_PATH = 'train.labels.0.csv'
+LABELS_META = 'train.labels.0.csv'
+LABELS_TUMOR = 'train.labels.1.csv'
 DATA_PATH = "train.feats.csv"
+METASTASES_CLEAN_CSV_NAME = 'clean_data_meta.csv'
+TUMOR_SIZE_CLEAN_CSV_NAME = 'clean_data_tumor.csv'
 
 FEATURE_12_DEFAULT = -1
 FEATURE_18_DEFAULT = -1
@@ -240,9 +243,12 @@ def form_name_to_one_hot(df):
     return df
 
 
-def add_target(df, target):
-    df['target'] = target['אבחנה-Location of distal metastases'].apply(ast.literal_eval)
-    df = df.drop('target', 1).join(df.target.str.join('|').str.get_dummies())
+def add_target(df, target, is_meta = True):
+    if is_meta:
+        df['target'] = target['אבחנה-Location of distal metastases'].apply(ast.literal_eval)
+        df = df.drop('target', 1).join(df.target.str.join('|').str.get_dummies())
+    else:
+        df['target'] = target['אבחנה-Tumor size']
     return df
 
 
@@ -259,7 +265,7 @@ def manipulate_surgeries(data):
     pass
 
 
-def clean_data(data, target = None, to_save = False):
+def clean_data(data, target = None, to_save = False, outputfile = METASTASES_CLEAN_CSV_NAME):
     data = data.fillna(np.nan).replace([np.nan], [None])
     data = remove_cols(data, COLUMNS_TO_REMOVE)
     data = to_epoch(data, cols=['surgery before or after-Activity date', 'אבחנה-Diagnosis date'])
@@ -274,16 +280,28 @@ def clean_data(data, target = None, to_save = False):
     data = clean_31(data)
     data = clean_32(data)
     data = form_name_to_one_hot(data)
-    if target:
-        data = add_target(data, target)
+
+    if target is not None:
+        if outputfile == METASTASES_CLEAN_CSV_NAME:
+            data = add_target(data, target, True)
+        else:
+            data = add_target(data, target, False)
+
     data = group_by_id(data)
     data = dummies(data)
     data.drop(columns=['id-hushed_internalpatientid'], inplace=True)
     if to_save:
-        data.to_csv('clean_data.csv', index=False)
+        data.to_csv(outputfile, index=False)
     return data
 
 if __name__ == '__main__':
+    #make clean metas file
     data = pd.read_csv(DATA_PATH)
-    target = pd.read_csv(TARGET_PATH)
-    clean_data(data,target,True)
+    target = pd.read_csv(LABELS_META)
+    clean_data(data,target,True,METASTASES_CLEAN_CSV_NAME)
+
+    #make clean tumor file
+    data = pd.read_csv(DATA_PATH)
+    target = pd.read_csv(LABELS_TUMOR)
+    clean_data(data, target, True, TUMOR_SIZE_CLEAN_CSV_NAME)
+    print(TUMOR_SIZE_CLEAN_CSV_NAME)

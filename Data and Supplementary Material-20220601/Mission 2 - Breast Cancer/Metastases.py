@@ -5,7 +5,8 @@ from sklearn.utils import shuffle
 from sklearn.svm import SVC
 import numpy as np
 import pandas as pd
-from Cleaner import clean_data
+from .Cleaner import clean_data, METASTASES_CLEAN_CSV_NAME, DATA_PATH
+
 TARGET_NAMES = ['ADR - Adrenals',
  'BON - Bones',
  'BRA - Brain',
@@ -17,10 +18,13 @@ TARGET_NAMES = ['ADR - Adrenals',
  'PLE - Pleura',
  'PUL - Pulmonary',
  'SKI - Skin']
+
+
+
 if __name__ == '__main__':
 
-    data= pd.read_csv('clean_data.csv')
-    x_test = clean_data(pd.read_csv('test.feats.csv'))
+    data= pd.read_csv(METASTASES_CLEAN_CSV_NAME)
+    x_test = clean_data(pd.read_csv(DATA_PATH))
     x_cols = [c for c in data.columns if c not in TARGET_NAMES]
     X = data[x_cols]
     Y=data[TARGET_NAMES]
@@ -36,8 +40,9 @@ if __name__ == '__main__':
     n_samples, n_features = X.shape # 10,100
     n_outputs = Y.shape[1] # 3
     n_classes = 3
+
     # forest = RandomForestClassifier(random_state=1)
-    svm =SVC()
+    svm = SVC()
     multi_target_forest = MultiOutputClassifier(svm, n_jobs=2)
     multi_target_forest.fit(X, Y)
     print(multi_target_forest.predict(x_test))
