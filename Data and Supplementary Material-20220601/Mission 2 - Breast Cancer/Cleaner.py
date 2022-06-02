@@ -71,7 +71,7 @@ def clean_8_apply_func(val: str) -> int:
 #   [name for name in her2d if
 #    name is not None and type(name) != float and not any(word in name.lower() for word in pos + neg + inter)]
 
-def clean_11(df: pd.DataFrame):
+def clean_11(data: pd.DataFrame):
     """
     original values- array([nan, 'none', 'NO', '-', '+', 'YES', 'no', 'single focus', 'not',
        'yes', '(-)', '?']
@@ -85,34 +85,13 @@ def clean_11(df: pd.DataFrame):
 
 def clean_11_helper(val:str):
     pos_penetration = ["yes","+","extensive","pos","MICROPAPILLARY VARIANT"]
-    neg_penetration = [None, "?", "no", "-"]
-    if val is None or any(phrase in val for phrase in neg):
+    neg_penetration = ["?", "no", "-"]
+    if val is None or any(phrase in val for phrase in neg_penetration):
         return 0
-    if any(phrase in val for phrase in pos):
+    if any(phrase in val for phrase in pos_penetration):
         return 1
     else:
         return 0
-
-    #
-    # feature = df["אבחנה-Ivi -Lymphovascular invasion"]
-    # for ind, value in enumerate(feature):
-    #     if value is None or value == '?':
-    #         feature[ind] = 0
-    #     elif value == "single focus":
-    #         feature[ind] = None
-    #     elif type(value) is str:
-    #         if value.isalpha():
-    #             value = value.lower()
-    #             if (value.find('n') != -1):
-    #                 feature[ind] = 0
-    #             elif (value.find('y') != -1):
-    #                 feature[ind] = 1
-    #         elif value.find('-') != -1:
-    #             feature[ind] = 0
-    #         elif value.find('+') != -1:
-    #             feature[ind] = 1
-    # df["אבחנה-Ivi -Lymphovascular invasion"] = feature
-    # return df
 
 
 def clean_12(df):
@@ -140,7 +119,7 @@ def _clean_12_s(s):
         elif '4' in s or 'iv' in s:
             return 50
         else:
-            return s
+            return 0
     m = re.findall(r"\d{1,2}", s)
     if m:
         return max([int(i) for i in m])
@@ -261,10 +240,8 @@ def form_name_to_one_hot(df):
     return df
 
 
-def add_target(df):
-    target = pd.read_csv(TARGET_PATH)
+def add_target(df, target):
     df['target'] = target['אבחנה-Location of distal metastases'].apply(ast.literal_eval)
-
     df = df.drop('target', 1).join(df.target.str.join('|').str.get_dummies())
     return df
 
@@ -282,12 +259,10 @@ def manipulate_surgeries(data):
     pass
 
 
-if __name__ == '__main__':
-    data = pd.read_csv(DATA_PATH)
+def clean_data(data, target = None, to_save = False):
     data = data.fillna(np.nan).replace([np.nan], [None])
     data = remove_cols(data, COLUMNS_TO_REMOVE)
-    data = to_epoch(data, cols=['surgery before or after-Activity date','אבחנה-Diagnosis date'])
-
+    data = to_epoch(data, cols=['surgery before or after-Activity date', 'אבחנה-Diagnosis date'])
     data = clean_8(data)
     data = clean_11(data)
     data = clean_12(data)
@@ -298,19 +273,17 @@ if __name__ == '__main__':
     # data = clean_30(data)
     data = clean_31(data)
     data = clean_32(data)
-
-
-    # for i in range(1, 33):
-    #     command = f'data = clean_{i}(data)'
-    #     print(command)
-    #     try:
-    #         eval(command)
-    #     except:
-    #         pass
-
     data = form_name_to_one_hot(data)
-    data = add_target(data)
+    if target:
+        data = add_target(data, target)
     data = group_by_id(data)
-    data.drop(columns = ['id-hushed_internalpatientid'], inplace=True)
     data = dummies(data)
-    data.to_csv('clean_data.csv', index=False)
+    data.drop(columns=['id-hushed_internalpatientid'], inplace=True)
+    if to_save:
+        data.to_csv('clean_data.csv', index=False)
+    return data
+
+if __name__ == '__main__':
+    data = pd.read_csv(DATA_PATH)
+    target = pd.read_csv(TARGET_PATH)
+    clean_data(data,target,True)
