@@ -127,6 +127,17 @@ def clean_31(df):
 def clean_32(df):
   df['אבחנה-pr'] = df['אבחנה-pr'].apply(_clean_32_s)
 
+
+def group_by_id(df):
+  """
+  should be activate after Form Name became one hot + sum
+  and df has target
+
+  :param df:
+  :return:
+  """
+  return pd.DataFrame(df.groupby('id-hushed_internalpatientid'))
+
 if __name__ == '__main__':
   data = pd.read_csv("train.feats.csv").fillna(np.nan).replace([np.nan], [None])
   clean_8(data)
