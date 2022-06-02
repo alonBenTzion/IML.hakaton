@@ -238,6 +238,7 @@ def form_name_to_one_hot(df):
 def add_target(df):
     target = pd.read_csv(TARGET_PATH)
     df['target'] = target['אבחנה-Location of distal metastases']
+    df.drop('target', 1).join(df.target.str.join('|').str.get_dummies())
     return df
 
 
@@ -284,4 +285,4 @@ if __name__ == '__main__':
     data = group_by_id(data)
     data.drop(columns = ['id-hushed_internalpatientid'], inplace=True)
     data = dummies(data)
-    data.to_csv('clean_data.csv')
+    data.to_csv('clean_data.csv', index=False)
