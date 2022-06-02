@@ -19,7 +19,7 @@ def clean_8(data: pd.DataFrame) -> pd.DataFrame:
   marking data as 0 - none, 1 - intermediate, 2 - exist
   other will get 0 value
   """
-  # her2d = data["אבחנה-Her2"]  # maybe need to copy?
+
   data["אבחנה-Her2"] = data["אבחנה-Her2"].apply(clean_8_apply_func)
 
   return data
@@ -31,11 +31,13 @@ def clean_8_apply_func(val: str) -> int:
   other = ['_', ')', 'Heg', 'nec', 'nrg', 'heg', 'Nag', 'nef', 'meg', 'nfg', 'ND',
            ',eg']  # got from clean_8_get_uniques
 
-  if any(phrase in val for phrase in pos):
+  if val is None or any(phrase in val for phrase in neg + other):
+    return 0
+  if any(phrase in val for phrase in pos) or val.isdigit():
     return 2
   if any(phrase in val for phrase in inter):
     return 1
-  if any(phrase in val for phrase in neg + other):
+  else:
     return 0
 
 
@@ -86,3 +88,11 @@ def clean_18(df):
 
 def clean_19(df):
   df['אבחנה-Nodes exam']=df['אבחנה-Nodes exam'].apply(lambda x:FEATURE_19_DEFAULT if x is None else x)
+
+
+if __name__ == '__main__':
+  data = pd.read_csv("train.feats.csv").fillna(np.nan).replace([np.nan], [None])
+  clean_8(data)
+  print(data["אבחנה-Her2"].unique())
+
+
