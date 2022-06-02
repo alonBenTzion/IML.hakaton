@@ -1,3 +1,5 @@
+import ast
+
 pos = ["חיובי", "jhuch", "+", "=", "pos", "fish", "amplified"]
 inter = ["inter", "בינוני", "chbubh", "equivocal", "indet", "borderline"]
 neg = ["שלילי", "akhkh", "akhah", "-", "neg", "non", "not", "no", "0", "?", "pending", "o", "test"]
@@ -248,8 +250,9 @@ def form_name_to_one_hot(df):
 
 def add_target(df):
     target = pd.read_csv(TARGET_PATH)
-    df['target'] = target['אבחנה-Location of distal metastases']
-    df.drop('target', 1).join(df.target.str.join('|').str.get_dummies())
+    df['target'] = target['אבחנה-Location of distal metastases'].apply(ast.literal_eval)
+
+    df = df.drop('target', 1).join(df.target.str.join('|').str.get_dummies())
     return df
 
 
@@ -279,7 +282,7 @@ if __name__ == '__main__':
     data = clean_16(data)
     data = clean_18(data)
     data = clean_19(data)
-    data = clean_30(data)
+    # data = clean_30(data)
     data = clean_31(data)
     data = clean_32(data)
 
