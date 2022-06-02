@@ -80,32 +80,39 @@ def clean_11(df: pd.DataFrame):
     printing num of samples for each value
     did not take in a concideration other values
     """
+    data["אבחנה-Ivi -Lymphovascular invasion"] = data["אבחנה-Ivi -Lymphovascular invasion"].apply(clean_11_helper)
+    return data
 
-    feature = df["אבחנה-Ivi -Lymphovascular invasion"]
-    for ind, value in enumerate(feature):
-        if value is None or value == '?' or value=='0':
-            feature[ind] = 0
-        elif value == "single focus":
-            feature[ind] = None
-        elif type(value) is str:
-            if value.isalpha():
-                value = value.lower()
-                if (value.find('n') != -1):
-                    feature[ind] = 0
-                elif (value.find('y') != -1):
-                    feature[ind] = 1
-                elif 'p' in value:
-                    feature[ind] = 1
-            elif value.find('-') != -1 or value=='MICROPAPILLARY VARIANT':
-                feature[ind] = 0
-            elif value.find('+') != -1 or value=='1':
-                feature[ind] = 1
-            else:
-                feature[ind] = 0
+def clean_11_helper(val:str):
+    pos_penetration = ["yes","+","extensive","pos","MICROPAPILLARY VARIANT"]
+    neg_penetration = [None, "?", "no", "-"]
+    if val is None or any(phrase in val for phrase in neg):
+        return 0
+    if any(phrase in val for phrase in pos):
+        return 1
+    else:
+        return 0
 
-
-    df["אבחנה-Ivi -Lymphovascular invasion"] = feature
-    return df
+    #
+    # feature = df["אבחנה-Ivi -Lymphovascular invasion"]
+    # for ind, value in enumerate(feature):
+    #     if value is None or value == '?':
+    #         feature[ind] = 0
+    #     elif value == "single focus":
+    #         feature[ind] = None
+    #     elif type(value) is str:
+    #         if value.isalpha():
+    #             value = value.lower()
+    #             if (value.find('n') != -1):
+    #                 feature[ind] = 0
+    #             elif (value.find('y') != -1):
+    #                 feature[ind] = 1
+    #         elif value.find('-') != -1:
+    #             feature[ind] = 0
+    #         elif value.find('+') != -1:
+    #             feature[ind] = 1
+    # df["אבחנה-Ivi -Lymphovascular invasion"] = feature
+    # return df
 
 
 def clean_12(df):
