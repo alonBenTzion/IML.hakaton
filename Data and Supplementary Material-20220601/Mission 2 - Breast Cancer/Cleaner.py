@@ -136,7 +136,16 @@ def group_by_id(df):
   :param df:
   :return:
   """
-  return pd.DataFrame(df.groupby('id-hushed_internalpatientid'))
+  form_cols = [col for col in df.columns if 'Form Name' in col]
+  rest_cols =  [col for col in df.columns if 'Form Name' not in col]
+  form_cols_df = pd.DataFrame(df.groupby('id-hushed_internalpatientid')[form_cols].sum())
+  df = pd.DataFrame(df.groupby('id-hushed_internalpatientid')[rest_cols].max())
+  df[form_cols]=form_cols_df
+  return df
+
+def form_name_to_one_hot(df):
+  df = pd.get_dummies(df, columns=[' Form Name'])
+  return df
 
 if __name__ == '__main__':
   data = pd.read_csv("train.feats.csv").fillna(np.nan).replace([np.nan], [None])
