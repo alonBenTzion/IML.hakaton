@@ -5,6 +5,7 @@ neg = ["שלילי", "akhkh", "akhah", "-", "neg", "non", "not", "no", "0", "?",
 import re
 import numpy as np
 import pandas as pd
+from datetime import datetime as dt
 
 TARGET_PATH = 'train.labels.0.csv'
 DATA_PATH = "train.feats.csv"
@@ -22,6 +23,16 @@ COLUMNS_TO_REMOVE = [' Hospital', 'User Name', 'אבחנה-Surgery date1',
 COLUMNS_TO_DUMMIES = ['אבחנה-Basic stage','אבחנה-Histological diagnosis','אבחנה-Histopatological degree','אבחנה-Lymphatic penetration'
                       ,'אבחנה-M -metastases mark (TNM)','אבחנה-Margin Type','אבחנה-N -lymph nodes mark (TNM)',
                       'אבחנה-Side','אבחנה-Stage','אבחנה-Surgery sum','אבחנה-T -Tumor mark (TNM)']
+
+def to_epoch(data:pd.DataFrame, cols:list) -> pd.DataFrame:
+    """
+    converts given cols in data to epoch time
+    returns fixed data
+    """
+    for col in cols:
+        data[col] = pd.to_datetime(data[col]).apply(lambda x:dt.timestamp(x))
+    return data
+
 
 def clean_8(data: pd.DataFrame) -> pd.DataFrame:
     """
