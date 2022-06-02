@@ -83,7 +83,7 @@ def clean_11(df: pd.DataFrame):
 
     feature = df["אבחנה-Ivi -Lymphovascular invasion"]
     for ind, value in enumerate(feature):
-        if value is None or value == '?':
+        if value is None or value == '?' or value=='0':
             feature[ind] = 0
         elif value == "single focus":
             feature[ind] = None
@@ -94,10 +94,16 @@ def clean_11(df: pd.DataFrame):
                     feature[ind] = 0
                 elif (value.find('y') != -1):
                     feature[ind] = 1
-            elif value.find('-') != -1:
+                elif 'p' in value:
+                    feature[ind] = 1
+            elif value.find('-') != -1 or value=='MICROPAPILLARY VARIANT':
                 feature[ind] = 0
-            elif value.find('+') != -1:
+            elif value.find('+') != -1 or value=='1':
                 feature[ind] = 1
+            else:
+                feature[ind] = 0
+
+
     df["אבחנה-Ivi -Lymphovascular invasion"] = feature
     return df
 
