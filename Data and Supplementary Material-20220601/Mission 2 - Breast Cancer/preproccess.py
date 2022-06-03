@@ -1,5 +1,5 @@
 import pandas as pd
-from .Cleaner import clean_data
+from Cleaner import clean_data
 import numpy as np
 
 
@@ -28,7 +28,7 @@ def load_and_clean_train_set(train_x_path,train_y_path, target_name):
 
 def load_and_clean_test_set(test_x_path):
     data = pd.read_csv(test_x_path)
-    return clean_data(data)
+    return clean_data(data), data
 
 def _resolve_conflicts(df1,df2):
     dummy_cols_to_add = set(df1.columns) - set(df2.columns)
@@ -41,6 +41,7 @@ def resolve_dummies_conflicts(X_train, X_test):
 
 def load_train_test_data_and_clean(train_x_path, train_y_path, test_x_path, target_name):
     X_train,Y_train = load_and_clean_train_set(train_x_path,train_y_path, target_name)
-    X_test = load_and_clean_test_set(test_x_path)
+    X_test, X_tets_origin = load_and_clean_test_set(test_x_path)
+    X_tets_origin.set_index('id-hushed_internalpatientid', inplace=True)
     resolve_dummies_conflicts(X_train,X_test)
-    return X_train,Y_train, X_test
+    return X_train,Y_train, X_test, X_tets_origin
