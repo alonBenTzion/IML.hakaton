@@ -19,8 +19,12 @@ def load_and_clean_train_set(train_x_path,train_y_path, target_name):
     data = pd.read_csv(train_x_path)
     target = pd.read_csv(train_y_path)
     clean_train = clean_data(data, target, target_name)
-    x_cols = [c for c in clean_train.columns if c not in TARGET_NAMES]
-    return clean_train[x_cols], clean_train[TARGET_NAMES]
+    if target_name ==  'אבחנה-Location of distal metastases':
+        x_cols = [c for c in clean_train.columns if c not in TARGET_NAMES]
+        return clean_train[x_cols], clean_train[TARGET_NAMES]
+    x_cols = [c for c in clean_train.columns if c != target_name]
+    return clean_train[x_cols], clean_train[target_name]
+
 
 def load_and_clean_test_set(test_x_path):
     data = pd.read_csv(test_x_path)
@@ -40,5 +44,3 @@ def load_train_test_data_and_clean(train_x_path, train_y_path, test_x_path, targ
     X_test = load_and_clean_test_set(test_x_path)
     resolve_dummies_conflicts(X_train,X_test)
     return X_train,Y_train, X_test
-
-

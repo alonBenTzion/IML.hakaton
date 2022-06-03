@@ -15,9 +15,9 @@ DATA_PATH = "train.feats.csv"
 METASTASES_CLEAN_CSV_NAME = 'clean_data_meta.csv'
 TUMOR_SIZE_CLEAN_CSV_NAME = 'clean_data_tumor.csv'
 
-FEATURE_12_DEFAULT = -1
-FEATURE_18_DEFAULT = -1
-FEATURE_19_DEFAULT = -1  # TODO check with Roey if still needed if doing fillna(NONE)
+FEATURE_12_DEFAULT = 0
+FEATURE_18_DEFAULT = 0
+FEATURE_19_DEFAULT = 0
 FEATURE_31_DEFAULT = 0
 FEATURE_32_DEFAULT = 0
 
@@ -28,6 +28,7 @@ COLUMNS_TO_REMOVE = [' Hospital', 'User Name', 'אבחנה-Surgery date1',
 COLUMNS_TO_DUMMIES = ['אבחנה-Basic stage','אבחנה-Histological diagnosis','אבחנה-Histopatological degree','אבחנה-Lymphatic penetration'
                       ,'אבחנה-M -metastases mark (TNM)','אבחנה-Margin Type','אבחנה-N -lymph nodes mark (TNM)',
                       'אבחנה-Side','אבחנה-Stage','אבחנה-Surgery sum','אבחנה-T -Tumor mark (TNM)']
+
 
 def to_epoch(data:pd.DataFrame, cols:list) -> pd.DataFrame:
     """
@@ -248,7 +249,7 @@ def add_target(df, target, target_name):
         df['target'] = target[target_name].apply(ast.literal_eval)
         df = df.drop('target', 1).join(df.target.str.join('|').str.get_dummies())
     else:
-        df['target'] = target['אבחנה-Tumor size']
+        df[target_name] = target[target_name]
     return df
 
 
@@ -276,6 +277,7 @@ def clean_data(data, target = None, target_name = None, to_save = False, outputf
     data = clean_16(data)
     data = clean_18(data)
     data = clean_19(data)
+    data['אבחנה-Surgery sum'].fillna(0, inplace=True)
     # data = clean_30(data)
     data = clean_31(data)
     data = clean_32(data)
