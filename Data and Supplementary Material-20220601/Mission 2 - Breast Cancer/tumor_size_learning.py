@@ -6,11 +6,12 @@ from sklearn.model_selection import cross_val_score
 TRAIN_X_PATH = 'train.feats.csv'
 TRAIN_Y_PATH = 'train.labels.1.csv'
 from xgboost import XGBRegressor
+
 if __name__ == '__main__':
     X, y = load_and_clean_train_set(TRAIN_X_PATH, TRAIN_Y_PATH, 'אבחנה-Tumor size')
-    score = np.mean(np.absolute(cross_val_score(XGBRegressor(objective='reg:squarederror'), X, y, cv=5,scoring='neg_mean_squared_error')))
+    score = np.mean(np.absolute(
+        cross_val_score(XGBRegressor(objective='reg:squarederror'), X, y, cv=5, scoring='neg_mean_squared_error')))
     print(score)
-
 
     # scores = []
     # for max_depth in range(1,30,1):
@@ -23,7 +24,6 @@ if __name__ == '__main__':
     #     scores.append(score_av)
     # plt.plot(range(1,30,1),scores)
     # plt.show()
-
 
     # tree = DecisionTreeClassifier()
     # multi_target_forest = MultiOutputClassifier(tree)
