@@ -11,7 +11,7 @@ from datetime import datetime as dt
 
 LABELS_META = 'train.labels.0.csv'
 LABELS_TUMOR = 'train.labels.1.csv'
-DATA_PATH = "train.feats.csv"
+DATA_PATH = "data/train.feats.csv"
 METASTASES_CLEAN_CSV_NAME = 'clean_data_meta.csv'
 TUMOR_SIZE_CLEAN_CSV_NAME = 'clean_data_tumor.csv'
 

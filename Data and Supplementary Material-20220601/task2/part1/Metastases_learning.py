@@ -7,8 +7,8 @@ from sklearn.model_selection import cross_val_score
 from matplotlib import pyplot as plt
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.tree import DecisionTreeClassifier, plot_tree
-TRAIN_X_PATH = 'train.feats.csv'
-TRAIN_Y_PATH = 'train.labels.0.csv'
+TRAIN_X_PATH = '../data/train.feats.csv'
+TRAIN_Y_PATH = '../data/train.labels.0.csv'
 
 if __name__ == '__main__':
     X, y = load_and_clean_train_set(TRAIN_X_PATH, TRAIN_Y_PATH, 'אבחנה-Location of distal metastases')

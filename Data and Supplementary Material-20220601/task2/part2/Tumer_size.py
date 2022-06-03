@@ -5,9 +5,9 @@ TARGET_NAME = 'אבחנה-Tumor size'
 
 
 
-TRAIN_X_PATH = 'train.feats.csv'
-TRAIN_Y_PATH = 'train.labels.1.csv'
-TEST_X_PATH = 'test.feats.csv'
+TRAIN_X_PATH = '../data/train.feats.csv'
+TRAIN_Y_PATH = '../data/train.labels.1.csv'
+TEST_X_PATH = '../data/test.feats.csv'
 
 
 def run_tumor_size_model():
@@ -20,7 +20,7 @@ def run_tumor_size_model():
 
 if __name__ == '__main__':
     pred = run_tumor_size_model()
-    pred.to_csv('pred_ts.csv', index=False)
+    pred.to_csv('predictions.csv', index=False)
 
 
 

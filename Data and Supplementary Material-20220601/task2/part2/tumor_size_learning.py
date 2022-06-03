@@ -3,8 +3,8 @@ import numpy as np
 from preproccess import load_and_clean_train_set
 from sklearn.model_selection import cross_val_score
 
-TRAIN_X_PATH = 'train.feats.csv'
-TRAIN_Y_PATH = 'train.labels.1.csv'
+TRAIN_X_PATH = '../data/train.feats.csv'
+TRAIN_Y_PATH = '../data/train.labels.1.csv'
 from xgboost import XGBRegressor
 
 if __name__ == '__main__':

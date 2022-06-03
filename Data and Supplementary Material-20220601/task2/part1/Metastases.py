@@ -4,9 +4,9 @@ from sklearn.tree import DecisionTreeClassifier
 from postproccessor import metastases_target_format, y_pred_to_origin_size_and_order
 
 TARGET_NAME = 'אבחנה-Location of distal metastases'
-TRAIN_X_PATH = 'train.feats.csv'
-TRAIN_Y_PATH = 'train.labels.0.csv'
-TEST_X_PATH = 'test.feats.csv'
+TRAIN_X_PATH = '../data/train.feats.csv'
+TRAIN_Y_PATH = '../data/train.labels.0.csv'
+TEST_X_PATH = '../data/test.feats.csv'
 
 
 def run_metastases_model():
@@ -22,4 +22,4 @@ def run_metastases_model():
 
 if __name__ == '__main__':
     pred = run_metastases_model()
-    pred.to_csv('pred_m.csv', index=False)
+    pred.to_csv('predictions.csv', index=False)
